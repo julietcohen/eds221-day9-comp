@@ -1,0 +1,112 @@
+---
+title: "day9-comp-afternoon"
+author: "Juliet"
+date: "8/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(tidyverse)
+library(palmerpenguins)
+library(lubridate)
+library(janitor)
+```
+
+### janitor::get_dupes()
+
+```{r}
+#starwars_dupes() <- get_dupes(starwars)
+
+starwars_dupes_hair <- starwars %>% 
+  get_dupes(hair_color)
+
+starwars_dupes_hair
+
+starwars_dupes_hc_ec <- starwars %>% 
+  get_dupes(hair_color, eye_color)
+
+starwars_dupes_hc_ec
+```
+
+### dplyr::across()
+
+```{r}
+#convert anything that is a character to lower case
+
+sw_across <- starwars %>% 
+  mutate(across(where(is.character), tolower))
+
+sw_across
+```
+
+```{r}
+starwars %>% 
+  group_by(homeworld) %>% 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+```
+
+### basic / common troubleshooting
+
+```{r}
+starwars %>% 
+  filter(homeworld == "Naboo")
+
+# == instead of =
+```
+
+```{r}
+starwars %>% 
+  separate(skin_color, into = c("col_1", "col_2"), sep = ",")
+
+# sep() instead of by = "", look at the error and documentaiton for ?separate()
+```
+
+
+```{r}
+ggplot(data = mtcars, aes( x = wt, y = mpg)) + 
+  geom_point()
+
+# putting %>% instead of a + in ggplot
+```
+
+
+```{r}
+troubleshooting <- penguins %>% 
+  mutate(across(where(is.numeric), as.character)) %>% 
+  mutate(island = fct_relevel(island, c("Dream", "Biscoe", "Torgersen"))) %>% 
+  unite(island_yr, c(island, year), sep = "_") %>% 
+  filter(species %in% c("Adelie", "Chinstrap")) %>% 
+  relocate(island_yr, .after = species) %>% 
+  rename(penguin_spp = species)
+
+# make sure you use is. and as. mindfully, is. asks and as. assigns
+
+# levels() tells you the order of the islands
+  
+```
+
+
+```{r}
+library(tidyverse)
+
+df <- tribble(
+  ~name, ~height, ~hair,
+  "teddy", 2.2, "brown",
+  "Khora", 3.1, "white",
+  "waffle", 1.0, "tan"
+)
+
+df %>% 
+  filter(name == "Waffle")
+```
+
+
+
+
+
+
+
+
+
